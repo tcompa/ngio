@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.9]
+
+### Fix
+- Fix AnnData reading over HTTP when directory listing is disabled: skip optional Zarr groups (`uns`, `obsm`, `varm`, etc.) that cannot be discovered without listing.
+
 ## [v0.5.8]
 
 ### Fix
