@@ -194,7 +194,7 @@ def test_well_inherits_plate_ngff_version_derive_plate(
 
 
 @pytest.mark.parametrize("ngff_version", ["0.4", "0.5"])
-def test_well_plate_ngff_change_version_derive_plate(
+def test_derive_plate_ngff_version_explicit_override(
     tmp_path: Path, ngff_version: Literal["0.4", "0.5"]
 ):
     test_plate = create_empty_plate(
@@ -205,6 +205,9 @@ def test_well_plate_ngff_change_version_derive_plate(
         tmp_path / "derived_test_plate.zarr", ngff_version=target_version
     )
     assert derived_test_plate.meta.version == target_version
+    derived_test_plate.add_image(row="A", column="01", image_path="0")
+    well = derived_test_plate.get_well("A", "01")
+    assert well.meta.version == target_version
 
 
 @pytest.mark.parametrize("ngff_version", ["0.4", "0.5"])
