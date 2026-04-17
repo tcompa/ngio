@@ -1291,6 +1291,8 @@ def derive_ome_zarr_plate(
             stacklevel=2,
         )
         ngff_version = version
+    else:
+        ngff_version = ome_zarr_plate.meta.plate.version
 
     if plate_name is None:
         plate_name = ome_zarr_plate.meta.plate.name
