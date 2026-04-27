@@ -1,4 +1,4 @@
-# Ngio - Next Generation file format IO
+# ngio - Next Generation file format IO
 
 [![License](https://img.shields.io/pypi/l/ngio.svg?color=green)](https://github.com/BioVisionCenter/ngio/raw/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/ngio.svg?color=green)](https://pypi.org/project/ngio)
@@ -8,11 +8,11 @@
 
 ngio is a Python library designed to simplify bioimage analysis workflows, offering an intuitive interface for working with OME-Zarr files.
 
-## What is Ngio?
+## What is ngio?
 
-Ngio is built for the [OME-Zarr](https://ngff.openmicroscopy.org/) file format, a modern, cloud-optimized format for biological imaging data. OME-Zarr stores large, multi-dimensional microscopy images and metadata in an efficient and scalable way.
+ngio is built for the [OME-Zarr](https://ngff.openmicroscopy.org/) file format, a modern, cloud-optimized format for biological imaging data. OME-Zarr stores large, multi-dimensional microscopy images and metadata in an efficient and scalable way.
 
-Ngio's mission is to streamline working with OME-Zarr files by providing a simple, object-based API for opening, exploring, and manipulating OME-Zarr images and high-content screening (HCS) plates. It also offers comprehensive support for labels, tables and regions of interest (ROIs), making it easy to extract and analyze specific regions in your data.
+ngio's mission is to streamline working with OME-Zarr files by providing a simple, object-based API for opening, exploring, and manipulating OME-Zarr images and high-content screening (HCS) plates. It also offers comprehensive support for labels, tables and regions of interest (ROIs), making it easy to extract and analyze specific regions in your data.
 
 ## Key Features
 
@@ -49,7 +49,7 @@ ngio supports OME-Zarr v0.4/v0.5. Support for version 0.6 and higher is planned 
 
 ## Development Status
 
-Ngio is under active development and is not yet stable. The API is subject to change, and bugs and breaking changes are expected.
+ngio is under active development and is not yet stable. The API is subject to change, and bugs and breaking changes are expected.
 We follow [Semantic Versioning](https://semver.org/). Which means for 0.x releases potentially breaking changes can be introduced in minor releases.
 
 ### Available Features
@@ -67,8 +67,8 @@ We follow [Semantic Versioning](https://semver.org/). Which means for 0.x releas
 
 ## Contributors
 
-Ngio is developed at the [BioVisionCenter](https://www.biovisioncenter.uzh.ch/en.html), University of Zurich, by [@lorenzocerrone](https://github.com/lorenzocerrone) and [@jluethi](https://github.com/jluethi).
+ngio is developed at the [BioVisionCenter](https://www.biovisioncenter.uzh.ch/en.html), University of Zurich, by [@lorenzocerrone](https://github.com/lorenzocerrone) and [@jluethi](https://github.com/jluethi).
 
 ## License
 
-Ngio is released under the BSD-3-Clause License. See [LICENSE](https://github.com/BioVisionCenter/ngio/blob/main/LICENSE) for details.
+ngio is released under the BSD-3-Clause License. See [LICENSE](https://github.com/BioVisionCenter/ngio/blob/main/LICENSE) for details.
