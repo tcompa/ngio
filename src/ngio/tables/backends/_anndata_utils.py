@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 import zarr
 from anndata import AnnData
 from anndata._io.specs import read_elem
 from anndata._io.utils import _read_legacy_raw
 from anndata._io.zarr import read_dataframe
+from anndata._settings import settings
 from anndata.compat import _clean_uns
 from anndata.experimental import read_dispatched
 
@@ -19,6 +20,29 @@ from ngio.utils._zarr_utils import is_group_listable
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
+
+
+def _update_anndata_global_settings(zarr_format: Literal[2, 3]) -> None:
+    """Update global settings for anndata's zarr read/write functions.
+
+    This is needed to ensure that anndata uses the correct zarr format when
+    reading/writing tables.
+
+    Args:
+        zarr_format (Literal[2, 3]): The zarr format version to use.
+            Must be either 2 or 3.
+    """
+    if zarr_format == 2:
+        # Added to avoid user issues when writing
+        # v2 and v3 in the same session
+        # order matters here, we need to set auto_shard_zarr_v3
+        # before setting zarr_write_format
+        settings.auto_shard_zarr_v3 = False
+        settings.zarr_write_format = 2
+    else:
+        settings.zarr_write_format = 3
+        # Added to avoid user warning in anndata 0.12.14
+        settings.auto_shard_zarr_v3 = True
 
 
 def custom_anndata_read_zarr(

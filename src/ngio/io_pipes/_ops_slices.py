@@ -250,8 +250,10 @@ def set_slice_as_dask(
     patch, slice_tuple = handle_int_set_as_dask(patch, slice_tuple)
     if ax is None:
         # Base case, no tuple in the slicing tuple
-        # assert False
-        da.to_zarr(arr=patch, url=zarr_array, region=slice_tuple)
+        # da.store instead of da.to_zarr: see ngio.common._pyramid for the
+        # dask>=2025.11 PerformanceWarning regression that to_zarr triggers
+        # when the input chunks aren't a multiple of the target's chunks.
+        da.store(patch, zarr_array, regions=slice_tuple, lock=False)
         return
 
     # Complex case, we have exactly one tuple in the slicing tuple
@@ -260,7 +262,7 @@ def set_slice_as_dask(
         _sub_slice = (*slice_tuple[:ax], slice(idx, idx + 1), *slice_tuple[ax + 1 :])
         sub_patch = da.take(patch, indices=i, axis=ax)
         sub_patch = da.expand_dims(sub_patch, axis=ax)
-        da.to_zarr(arr=sub_patch, url=zarr_array, region=_sub_slice)
+        da.store(sub_patch, zarr_array, regions=_sub_slice, lock=False)
 
 
 ##############################################################

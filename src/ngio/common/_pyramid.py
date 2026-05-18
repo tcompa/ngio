@@ -38,19 +38,13 @@ def _on_disk_dask_zoom(
     source_array = da.from_zarr(source)
     target_array = dask_zoom(source_array, target_shape=target.shape, order=order)
 
-    # This is a potential fix for Dask 2025.11
-    # import dask.config
-    # chunk_size_bytes = np.prod(target.chunks) * target_array.dtype.itemsize
-    # current_chunk_size = dask.config.get("array.chunk-size")
-    # Increase the chunk size to avoid dask potentially creating
-    # corrupted chunks when writing chunks that are not multiple of the
-    # target chunk size
-    # dask.config.set({"array.chunk-size": f"{chunk_size_bytes}B"})
     target_array = target_array.rechunk(target.chunks)
     target_array = target_array.compute_chunk_sizes()
-    target_array.to_zarr(target)
-    # Restore previous chunk size
-    # dask.config.set({"array.chunk-size": current_chunk_size})
+    # da.store rather than to_zarr: dask >=2025.11's to_zarr internally
+    # re-derives chunks via normalize_chunks(chunks="auto", ...) and warns
+    # (treated as error by our filterwarnings) when the result isn't a
+    # multiple of the zarr target's chunks. da.store writes blocks 1:1.
+    da.store(target_array, target, lock=False)
 
 
 def _on_disk_coarsen(
@@ -100,7 +94,8 @@ def _on_disk_coarsen(
         aggregation_function, source_array, coarsening_setup, trim_excess=True
     )
     out_target = out_target.rechunk(target.chunks)
-    out_target.to_zarr(target)
+    # See _on_disk_dask_zoom for rationale.
+    da.store(out_target, target, lock=False)
 
 
 def on_disk_zoom(
