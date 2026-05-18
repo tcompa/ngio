@@ -33,6 +33,11 @@ def _update_anndata_global_settings(zarr_format: Literal[2, 3]) -> None:
             Must be either 2 or 3.
     """
     if zarr_format == 2:
+        # Added to avoid user issues when writing
+        # v2 and v3 in the same session
+        # order matters here, we need to set auto_shard_zarr_v3
+        # before setting zarr_write_format
+        settings.auto_shard_zarr_v3 = False
         settings.zarr_write_format = 2
     else:
         settings.zarr_write_format = 3

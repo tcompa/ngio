@@ -39,7 +39,7 @@ dependencies = [
     "zarr>3",
     "scipy",
     "fsspec",
-    "anndata",
+    "anndata>=0.12.0,<0.13.0",
     "pydantic",
     "pandas>=1.2.0,<3.0.0",
     "requests",
