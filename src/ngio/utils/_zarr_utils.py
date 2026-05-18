@@ -482,8 +482,14 @@ def _zarr_python_copy(src_group: zarr.Group, dest_group: zarr.Group):
             overwrite=True,
         )
         if array.ndim > 0:
-            dask_array = da.from_zarr(array)
-            da.to_zarr(dask_array, dst, overwrite=False)
+            if array.dtype.hasobject or array.dtype.kind in ("U", "S"):
+                # dask >=2025.11 refuses auto-chunking for object/string dtypes
+                # (NotImplementedError in dask.array.core.auto_chunks). These
+                # arrays come from table backends and are small; copy directly.
+                dst[:] = array[:]
+            else:
+                dask_array = da.from_zarr(array)
+                da.to_zarr(dask_array, dst, overwrite=False)
     # Copy subgroups
     for name, subgroup in src_group.groups():
         dest_subgroup = dest_group.create_group(name, overwrite=True)
