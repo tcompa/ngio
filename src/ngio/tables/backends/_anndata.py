@@ -1,6 +1,5 @@
 import zarr
 from anndata import AnnData
-from anndata._settings import settings
 from pandas import DataFrame
 from polars import DataFrame as PolarsDataFrame
 from polars import LazyFrame
@@ -8,6 +7,7 @@ from zarr.storage import FsspecStore, LocalStore, MemoryStore
 
 from ngio.tables.backends._abstract_backend import AbstractTableBackend
 from ngio.tables.backends._anndata_utils import (
+    _update_anndata_global_settings,
     custom_anndata_read_zarr,
 )
 from ngio.tables.backends._utils import (
@@ -43,7 +43,7 @@ class AnnDataBackend(AbstractTableBackend):
 
     def load_as_anndata(self) -> AnnData:
         """Load the table as an AnnData object."""
-        settings.zarr_write_format = self._group_handler.zarr_format
+        _update_anndata_global_settings(self._group_handler.zarr_format)
         anndata = custom_anndata_read_zarr(self._group_handler._group)
         anndata = normalize_anndata(anndata, index_key=self.index_key)
         return anndata
@@ -95,7 +95,7 @@ class AnnDataBackend(AbstractTableBackend):
     def write_from_anndata(self, table: AnnData) -> None:
         """Serialize the table from an AnnData object."""
         # Make sure to use the correct zarr format
-        settings.zarr_write_format = self._group_handler.zarr_format
+        _update_anndata_global_settings(self._group_handler.zarr_format)
         store = self._group_handler.store
         path = self._group_handler.group.path
         if isinstance(store, LocalStore):
