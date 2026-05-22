@@ -278,6 +278,25 @@ def test_channels():
         Channel.default_init(label="DAPI", data_type="color")
 
 
+def test_channels_duplicate_wavelength_id():
+    # Duplicate wavelength_ids are now allowed at creation time
+    channels = ChannelsMeta.default_init(
+        labels=["DAPI", "GFP"],
+        wavelength_id=["A01_C01", "A01_C01"],
+    )
+    assert len(channels.channels) == 2
+    assert channels.channels[0].wavelength_id == "A01_C01"
+    assert channels.channels[1].wavelength_id == "A01_C01"
+
+    # Lookup by label still works even with duplicate wavelength_ids
+    assert channels.get_channel_idx(channel_label="DAPI") == 0
+    assert channels.get_channel_idx(channel_label="GFP") == 1
+
+    # Lookup by an ambiguous wavelength_id must fail with a clear error
+    with pytest.raises(ValueError, match="Multiple channels match"):
+        channels.get_channel_idx(wavelength_id="A01_C01")
+
+
 def test_ngio_colors():
     assert NgioColors.semi_random_pick(channel_name="DAPI") == NgioColors.dapi
     assert NgioColors.semi_random_pick(channel_name="channel_dapi") == NgioColors.dapi
