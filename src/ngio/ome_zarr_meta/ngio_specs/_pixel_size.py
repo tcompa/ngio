@@ -2,7 +2,6 @@
 
 import math
 from functools import total_ordering
-from typing import overload
 
 import numpy as np
 from pydantic import BaseModel
@@ -72,13 +71,7 @@ class PixelSize(BaseModel):
         """Return the pixel size as a dictionary."""
         return {"t": self.t, "z": self.z, "y": self.y, "x": self.x}
 
-    @overload
-    def get(self, axis: str, default: float) -> float: ...
-
-    @overload
-    def get(self, axis: str, default: None = None) -> float | None: ...
-
-    def get(self, axis: str, default: float | None = None) -> float | None:
+    def get(self, axis: str, default: float | None = None) -> float:
         """Get the pixel size for a given axis (in canonical name)."""
         px_size = self.as_dict().get(axis, default)
         if px_size is None:
