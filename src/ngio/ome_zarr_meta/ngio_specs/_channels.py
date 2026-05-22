@@ -371,7 +371,6 @@ class ChannelsMeta(BaseModel):
             _wavelength_id: Sequence[str | None] = [None] * len(labels)
         else:
             _wavelength_id = _check_elements(wavelength_id, str)
-            _wavelength_id = _check_unique(wavelength_id)
 
         if colors is None:
             _colors = [NgioColors.semi_random_pick(label) for label in labels]
@@ -447,13 +446,37 @@ class ChannelsMeta(BaseModel):
 
         if channel_label is not None:
             if channel_label not in self.channel_labels:
-                raise NgioValueError(f"Channel with label {channel_label} not found.")
+                repr_channels = [
+                    f"{i}:(label={ch.label}, wavelength_id={ch.wavelength_id})"
+                    for i, ch in enumerate(self.channels)
+                ]
+                raise NgioValueError(
+                    f"Channel with label {channel_label} not found."
+                    f"Channels: [{', '.join(repr_channels)}]"
+                )
             return self.channel_labels.index(channel_label)
 
         if wavelength_id is not None:
             if wavelength_id not in self.channel_wavelength_ids:
+                repr_channels = [
+                    f"{i}:(label={ch.label}, wavelength_id={ch.wavelength_id})"
+                    for i, ch in enumerate(self.channels)
+                ]
                 raise NgioValueError(
                     f"Channel with wavelength ID {wavelength_id} not found."
+                    f"Channels: [{', '.join(repr_channels)}]"
+                )
+            # Raise an error if multiple channels have the same wavelength ID
+            if self.channel_wavelength_ids.count(wavelength_id) > 1:
+                repr_channels = [
+                    f"{i}:(label={ch.label}, wavelength_id={ch.wavelength_id})"
+                    for i, ch in enumerate(self.channels)
+                ]
+                raise NgioValueError(
+                    f"Multiple channels match for wavelength_id={wavelength_id}. "
+                    "Channel selection by wavelength_id is not possible in this case. "
+                    "Please select the channel by label instead. "
+                    f"Channels: [{', '.join(repr_channels)}]"
                 )
             return self.channel_wavelength_ids.index(wavelength_id)
 
