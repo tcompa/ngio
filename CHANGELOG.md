@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.11]
+
+### Fix
+- Remove eager uniqueness check on `wavelength_id` in `ChannelsMeta.default_init`: duplicate `wavelength_id` values are now allowed at creation time. `get_channel_idx` raises a clear error if a lookup by an ambiguous `wavelength_id` is attempted, directing users to select by label instead.
+
 ## [v0.5.10]
 
 ### Fix
