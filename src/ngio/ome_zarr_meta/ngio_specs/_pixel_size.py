@@ -2,7 +2,6 @@
 
 import math
 from functools import total_ordering
-from typing import overload
 
 import numpy as np
 from pydantic import BaseModel
