@@ -297,6 +297,22 @@ def test_channels_duplicate_wavelength_id():
         channels.get_channel_idx(wavelength_id="A01_C01")
 
 
+def test_get_channel_idx_errors():
+    channels = ChannelsMeta.default_init(labels=["DAPI", "GFP"])
+
+    with pytest.raises(ValueError, match="not found"):
+        channels.get_channel_idx(channel_label="MISSING")
+
+    with pytest.raises(ValueError, match="not found"):
+        channels.get_channel_idx(wavelength_id="MISSING")
+
+    with pytest.raises(ValueError, match="not both"):
+        channels.get_channel_idx(channel_label="DAPI", wavelength_id="DAPI")
+
+    with pytest.raises(ValueError, match="must receive either"):
+        channels.get_channel_idx()
+
+
 def test_ngio_colors():
     assert NgioColors.semi_random_pick(channel_name="DAPI") == NgioColors.dapi
     assert NgioColors.semi_random_pick(channel_name="channel_dapi") == NgioColors.dapi
