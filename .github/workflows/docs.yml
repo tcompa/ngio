@@ -41,15 +41,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      # TODO: Check whether this cache is actually used for building the docs
-      # - name: Restore shared data cache
-      #   uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-      #   with:
-      #     path: data/
-      #     key: "${{ runner.os }}-data-${{ hashFiles('tests/conftest.py') }}"
-      #     restore-keys: |
-      #       "${{ runner.os }}-data-"
-
       - name: Deploy docs
         run: |
           VERSION=$(echo $GITHUB_REF | sed 's/refs\/tags\///' | sed 's/refs\/heads\///')
