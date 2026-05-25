@@ -1,5 +1,8 @@
 # Changelog
 
+### Chores
+- Harden GitHub Actions and scan workflows through `zizmor`.
+
 ## [v0.5.11]
 
 ### Fix
